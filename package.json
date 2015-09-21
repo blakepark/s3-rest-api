@@ -1,0 +1,19 @@
+{
+  "name": "mailer",
+  "version": "0.0.1",
+  "private": true,
+  "author": "Graham Lee <ghmlee@ghmlee.com>",
+  "description": "mailer",
+  "dependencies": {
+    "express": "4.13.3",
+    "body-parser": "1.14.1",
+    "raven": "0.8.1",
+    "aws-sdk": "2.2.9"
+  },
+  "engines": {
+    "node": "4.x"
+  },
+  "scripts": {
+    "start": "node app.js"
+  }
+}

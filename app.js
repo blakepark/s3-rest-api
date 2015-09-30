@@ -8,7 +8,7 @@ var app = express();
 aws.config.update({ accessKeyId: process.env.ACCESSKEY || '',
                     secretAccessKey: process.env.SECRET || '' });
 
-app.use(bodyParser.raw({ type: 'application/octet-stream' }));
+app.use(bodyParser.raw({ type: 'application/octet-stream', limit: '50mb' }));
 app.use(raven.middleware.express(process.env.SENTRY_DSN || ''));
 
 app.get('/*', function(req, res){

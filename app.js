@@ -34,10 +34,10 @@ app.put('/:region/:bucket', function(req, res){
 
   s3.putObject(params, function(err, data){
     if (!err) return;
-    raven.captureException(err);
+    console.log(err);
   });
 
-  res.json('');
+  res.json(undefined);
 });
 
 app.listen(process.env.PORT || 8888);

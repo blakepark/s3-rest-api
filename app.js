@@ -20,6 +20,9 @@ app.put('/:region/:bucket', function(req, res){
   var bucket = req.params.bucket;
   var name = req.query.name;
   var body = req.body;
+  var contentType = 'application/octet-stream';
+  if (name.indexOf('.torrent') > -1) contentType = 'application/x-bittorrent';
+  else if (name.indexOf('.jpg') > -1) contentType = 'image/jpeg';
 
   aws.config.update({region: region});
 
@@ -29,7 +32,8 @@ app.put('/:region/:bucket', function(req, res){
     Bucket: bucket,
     Key: name,
     Body: body,
-    ACL: 'public-read'
+    ACL: 'public-read',
+    ContentType: contentType
   };
 
   s3.putObject(params, function(err, data){

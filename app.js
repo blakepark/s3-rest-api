@@ -11,8 +11,33 @@ aws.config.update({ accessKeyId: process.env.ACCESSKEY || '',
 app.use(bodyParser.raw({ type: 'application/octet-stream', limit: '50mb' }));
 app.use(raven.middleware.express(process.env.SENTRY_DSN || ''));
 
+app.get('/:region/:bucket', function(req, res){
+  var region = req.params.region;
+  var bucket = req.params.bucket;
+  var name = req.query.name;
+
+  aws.config.update({region: region});
+
+  var s3 = new aws.S3();
+
+  var params = {
+    Bucket: bucket,
+    Prefix: name
+  }
+
+  s3.listObjects(params, function(err, data){
+    if (err) {
+      res.json(err);
+      return;
+    }
+
+    var contents = data.Contents;
+    res.json(contents);
+  });
+});
+
 app.get('/*', function(req, res){
-  res.send('');
+  res.json(undefined);
 });
 
 app.put('/:region/:bucket', function(req, res){
@@ -37,6 +62,28 @@ app.put('/:region/:bucket', function(req, res){
   };
 
   s3.putObject(params, function(err, data){
+    if (!err) return;
+    console.log(err);
+  });
+
+  res.json(undefined);
+});
+
+app.delete('/:region/:bucket', function(req, res){
+  var region = req.params.region;
+  var bucket = req.params.bucket;
+  var name = req.query.name;
+
+  aws.config.update({region: region});
+
+  var s3 = new aws.S3();
+
+  var params = {
+    Bucket: bucket,
+    Key: name
+  };
+
+  s3.deleteObject(params, function(err, data){
     if (!err) return;
     console.log(err);
   });
